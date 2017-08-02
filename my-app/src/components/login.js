@@ -19,7 +19,7 @@ class Login extends Component {
   }
 
   componentDidMount() {
-    if(document.getElementById('loader').style != null){
+    if(document.getElementById('loader') != null && document.getElementById('loader').style != null){
       document.getElementById('loader').style.display = 'none';
     }
   }
@@ -42,7 +42,7 @@ class Login extends Component {
   }
 
   login() {
-    if(document.getElementById('loader').style != null){
+    if(document.getElementById('loader') != null && document.getElementById('loader').style != null){
       document.getElementById('loader').style.display = 'block';
     }
     fetch('https://ppmartservices.herokuapp.com/auth/login', {
@@ -59,7 +59,7 @@ class Login extends Component {
         return response.json();
       }
       else {
-        if(document.getElementById('loader').style != null){
+        if(document.getElementById('loader') != null && document.getElementById('loader').style != null){
           document.getElementById('loader').style.display = 'none';
         }
         var error = new Error(response.statusText);
@@ -76,13 +76,13 @@ class Login extends Component {
             });
         }else{
           this.setAlert("danger", "Login failed", data.message);
-          if(document.getElementById('loader').style != null){
+          if(document.getElementById('loader') != null && document.getElementById('loader').style != null){
             document.getElementById('loader').style.display = 'none';
           }
         }
     }).catch((ex) => {
         console.log('login failed', ex);
-        if(document.getElementById('loader').style != null){
+        if(document.getElementById('loader') != null && document.getElementById('loader').style != null){
           document.getElementById('loader').style.display = 'none';
         }
     });
