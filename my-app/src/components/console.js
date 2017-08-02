@@ -7,7 +7,7 @@ class Console extends Component {
       <div>
         <Navigation />
         <div>
-          <section className="hero is-primary">
+          <section className="hero is-info">
             <div className="hero-body">
               <div className="container">
                 <h1 className="title">

@@ -18,6 +18,10 @@ class Login extends Component {
     this.handleSubmitted = this.handleSubmit.bind(this);
   }
 
+  componentDidMount() {
+    document.getElementById('loader').style.display = 'none';
+  }
+
   handleInputChange(event) {
     const value = event.target.value;
     const name = event.target.name;
@@ -36,6 +40,7 @@ class Login extends Component {
   }
 
   login() {
+    document.getElementById('loader').style.display = 'block';
     fetch('https://ppmartservices.herokuapp.com/auth/login', {
         method: 'POST',
         headers: {
@@ -50,6 +55,7 @@ class Login extends Component {
         return response.json();
       }
       else {
+        document.getElementById('loader').style.display = 'none';
         var error = new Error(response.statusText);
         error.response = response;
         throw error;
@@ -64,9 +70,11 @@ class Login extends Component {
             });
         }else{
           this.setAlert("danger", "Login failed", data.message);
+          document.getElementById('loader').style.display = 'none';
         }
     }).catch((ex) => {
         console.log('login failed', ex);
+        document.getElementById('loader').style.display = 'none';
     });
   }
 
@@ -105,7 +113,9 @@ class Login extends Component {
                 </div>
                 <div className="field">
                   <p className="control">
-                    <button className="button is-success" onClick={this.handleSubmitted}>Login</button>
+                    <button className="button is-success" onClick={this.handleSubmitted}>
+                      <i className="fa fa-spinner fa-pulse fa-3x fa-fw" id="loader"></i>&nbsp;Login&nbsp;
+                    </button>
                   </p>
                 </div>
             </div>

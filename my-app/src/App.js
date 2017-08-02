@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import Login from './components/login';
 import Console from './components/console';
 import Home from './components/home';
+import Product from './components/product';
+import ProductGroup from './components/productgroup';
+import ProductType from './components/producttype';
 import Global from './global';
 
 class App extends Component {
@@ -27,6 +30,9 @@ class App extends Component {
         <div>
           <Route path={process.env.PUBLIC_URL + '/login'}  component={Login}/>
           <PrivateRoute exact path={process.env.PUBLIC_URL + '/'} component={Home} />
+          <PrivateRoute exact path={process.env.PUBLIC_URL + '/product'} component={Product} />
+          <PrivateRoute exact path={process.env.PUBLIC_URL + '/product/group'} component={ProductGroup} />
+          <PrivateRoute exact path={process.env.PUBLIC_URL + '/product/type'} component={ProductType} />
           <PrivateRoute path={process.env.PUBLIC_URL + '/console'} component={Console} />
         </div>
       </Router>
