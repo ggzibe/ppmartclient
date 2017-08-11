@@ -3,7 +3,7 @@ import Navigation from './navigation';
 import UserList from '../props/user/userlist';
 import ManageUser from '../props/user/manageuser';
 
-class Home extends Component {
+export default class Home extends Component {
   onUpdated = () => {
     this.childUserList.handleRefresh();
   }
@@ -31,5 +31,3 @@ class Home extends Component {
     return (homeInstance);
   }
 }
-
-export default Home;

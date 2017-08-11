@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import 'whatwg-fetch';
 import Global from '../../global';
 
@@ -6,8 +7,7 @@ export default class UserList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      users: [],
-      global: new Global()
+      users: []
     };
     this.handleDeleted = this.handleDelete.bind(this);
     this.handleEdited = this.handleEdite.bind(this);
@@ -15,6 +15,7 @@ export default class UserList extends Component {
 
   componentDidMount() {
     this.props.onRef(this);
+    this.context.global = new Global();
     this.getUserList();
   }
 
@@ -49,7 +50,7 @@ export default class UserList extends Component {
   getUserList() {
     fetch('https://ppmartservices.herokuapp.com/users/all',{
       headers: {
-        'Authorization': 'Token ' + (this.state.global.getCurrentUser() !== null ? this.state.global.getCurrentUser().token : ''),
+        'Authorization': 'Token ' + (this.context.global.getCurrentUser() !== null ? this.context.global.getCurrentUser().token : ''),
       },
     })
     .then((response) => {
@@ -80,4 +81,8 @@ export default class UserList extends Component {
       </section>
     );
   }
+}
+
+UserList.contextTypes = {
+  global: PropTypes.object
 }

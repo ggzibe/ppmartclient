@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class Alert extends Component {
+export default class Alert extends Component {
     constructor(props){
       super(props);
       this.state = {
@@ -36,24 +36,17 @@ class Alert extends Component {
 
     render() {
       const classType = "message is-" + this.state.type;
-      const alertInstance = (
-        <article className={classType}>
-          <div className="message-header">
-            <p>{this.state.header}</p>
-            <button className="delete" onClick={this.onDeleted}></button>
-          </div>
-          <div className="message-body">
-            {this.state.message}
-          </div>
-        </article>
-      );
-      if(this.state.isShow){
-        return (alertInstance);
-      }
-      else {
-        return (<div></div>);
-      }
+      const alertInstance = this.state.isShow ? (
+          <article className={classType}>
+            <div className="message-header">
+              <p>{this.state.header}</p>
+              <button className="delete" onClick={this.onDeleted}></button>
+            </div>
+            <div className="message-body">
+              {this.state.message}
+            </div>
+          </article>
+      ) : <div></div> ;
+      return (alertInstance);
     }
 }
-
-export default Alert;

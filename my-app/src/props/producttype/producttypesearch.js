@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-class ProductTypeSearch extends Component {
+export default class ProductTypeSearch extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -8,7 +8,10 @@ class ProductTypeSearch extends Component {
     };
     this.handleInputChanged = this.handleInputChange.bind(this);
     this.handleCreated = this.handleCreate.bind(this);
-    this.handleSearched = this.handleSearch.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.onRef(this);
   }
 
   handleInputChange(event) {
@@ -17,14 +20,11 @@ class ProductTypeSearch extends Component {
     this.setState({
       [name]: value
     });
+    this.props.onSearch(value);
   }
 
   handleCreate(){
     this.props.onCreate();
-  }
-
-  handleSearch(){
-    this.props.onSearch(this.state.txtSearch);
   }
 
   render(){
@@ -34,14 +34,10 @@ class ProductTypeSearch extends Component {
           <div className="level-left">
             <div className="level-item">
               <div className="field has-addons">
-                <p className="control">
-                  <input className="input" type="text" placeholder="Find a type" name="txtSearch"
+                <p className="control has-icons-left has-icons-right">
+                  <input className="input" type="text" placeholder="Find product type" name="txtSearch"
                     value={this.state.txtSearch} onChange={this.handleInputChanged} />
-                </p>
-                <p className="control">
-                  <button className="button" onClick={this.handleSearched}>
-                    <span className="icon is-small"><i className="fa fa-search"></i></span>
-                  </button>
+                  <span className="icon is-small is-left"><i className="fa fa-search"></i></span>
                 </p>
               </div>
             </div>
@@ -50,7 +46,7 @@ class ProductTypeSearch extends Component {
             <p className="level-item">
               <a className="button is-success" onClick={this.handleCreated}>
                 <span className="icon is-small"><i className="fa fa-plus"></i></span>
-                <span>New</span>
+                <span>New Create</span>
               </a>
             </p>
           </div>
@@ -60,5 +56,3 @@ class ProductTypeSearch extends Component {
     return (instance);
   }
 }
-
-export default ProductTypeSearch;

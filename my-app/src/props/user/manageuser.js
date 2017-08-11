@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import 'whatwg-fetch';
 import Global from '../../global';
 
@@ -8,11 +9,14 @@ export default class ManageUser extends Component {
     this.state = {
       username: '',
       password: '',
-      isAdmin: false,
-      global: new Global()
+      isAdmin: false
     };
     this.handleInputChanged = this.handleInputChange.bind(this);
     this.handleSubmitted = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    this.context.global = new Global();
   }
 
   handleInputChange(event) {
@@ -34,7 +38,7 @@ export default class ManageUser extends Component {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Token ' + (this.state.global.getCurrentUser() != null ? this.state.global.getCurrentUser().token : ''),
+          'Authorization': 'Token ' + (this.context.global.getCurrentUser() != null ? this.context.global.getCurrentUser().token : ''),
         },
         body: JSON.stringify({
           username: this.state.username,
@@ -42,7 +46,8 @@ export default class ManageUser extends Component {
           is_admin: this.state.isAdmin,
           email: this.state.username + '@gmail.com'
         })
-    }).then((response) => {
+    })
+    .then((response) => {
       if(response.status >= 200 && response.status < 300){
         return response.json();
       }
@@ -51,10 +56,12 @@ export default class ManageUser extends Component {
         error.response = response;
         throw error;
       }
-    }).then((data) => {
+    })
+    .then((data) => {
         alert('result: ' + data.result + ' : ' + data.message);
         this.props.onUpdate();
-    }).catch((ex) => {
+    })
+    .catch((ex) => {
         console.log('create user failed', ex);
     });
   }
@@ -128,4 +135,8 @@ export default class ManageUser extends Component {
       </section>
     );
   }
+}
+
+ManageUser.contextTypes = {
+  global: PropTypes.object
 }

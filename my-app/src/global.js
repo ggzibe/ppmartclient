@@ -39,4 +39,17 @@ export default class Global {
     setTimeout(cb, 1000);
   }
 
+  startLoader(loader){
+    if(loader != null && loader.style != null){
+      loader.style.display = 'block';
+    }
+  }
+
+  endLoader(loader){
+    if(loader != null && loader.style != null){
+      loader.style.display = 'none';
+    }
+  }
+
+
 }

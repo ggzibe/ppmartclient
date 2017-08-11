@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Navigation from './navigation';
 import ProductNavigation from './product.navigation';
 
-class Product extends Component {
+export default class Product extends Component {
   render(){
     const productInstance = (
       <div>
@@ -18,5 +18,3 @@ class Product extends Component {
     return (productInstance);
   }
 }
-
-export default Product;

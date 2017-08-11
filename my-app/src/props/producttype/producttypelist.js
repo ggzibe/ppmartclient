@@ -1,19 +1,21 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import 'whatwg-fetch';
 import Global from '../../global';
 
-class ProductTypeList extends Component {
+export default class ProductTypeList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      productTypes: [],
-      global: new Global()
+      productTypes: []
     };
     this.handleEdited = this.handleEdit.bind(this);
+    this.handleDeleted = this.handleDelete.bind(this);
   }
 
   componentDidMount() {
     this.props.onRef(this);
+    this.context.global = new Global();
     this.getProductTypeList();
   }
 
@@ -21,29 +23,85 @@ class ProductTypeList extends Component {
     this.props.onEdit(model);
   }
 
+  handleDelete(model){
+    this.props.onDelete(model);
+  }
+
   onRefresh(){
     this.getProductTypeList();
   }
 
   onFilter(str){
-    
+    this.context.filterField = str;
+    this.injectToState();
+  }
+
+  onConfirmDelete(model){
+    fetch('https://ppmartservices.herokuapp.com/product/types/detail/' + model.id , {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Token ' + (this.context.global.getCurrentUser() != null ? this.context.global.getCurrentUser().token : ''),
+        }
+    })
+    .then((response) => {
+      if(response.status >= 200 && response.status < 300){
+        return response.json();
+      }
+      else{
+        var error = new Error(response.statusText);
+        error.response = response;
+        throw error;
+      }
+    })
+    .then((data) => {
+      this.onRefresh();
+    })
+    .catch((ex) => {
+      console.log('delete failed', ex);
+    });
   }
 
   getProductTypeList() {
     fetch('https://ppmartservices.herokuapp.com/product/types/list',{
       headers: {
-        'Authorization': 'Token ' + (this.state.global.getCurrentUser() !== null ? this.state.global.getCurrentUser().token : ''),
+        'Authorization': 'Token ' + (this.context.global.getCurrentUser() !== null ? this.context.global.getCurrentUser().token : ''),
       },
     })
     .then((response) => {
-      return response.json();
-    }).then((data) => {
-      this.setState({
-          productTypes: data
-      });
-    }).catch((ex) => {
+      if(response.status >= 200 && response.status < 300){
+        return response.json();
+      }
+      else{
+        var error = new Error(response.statusText);
+        error.response = response;
+        throw error;
+      }
+    })
+    .then((data) => {
+        this.context.dataList = data;
+        this.injectToState();
+    })
+    .catch((ex) => {
       console.log('parsing failed', ex);
     });
+  }
+
+  injectToState(){
+    if(this.context.filterField !== undefined && this.context.filterField !== null && this.context.filterField !== "")
+    {
+      this.setState({
+          productTypes: this.context.dataList.filter((item) =>
+            item.name.toLowerCase().indexOf(this.context.filterField.toLowerCase()) > -1 ||
+            (item.description !== null && item.description.toLowerCase().indexOf(this.context.filterField.toLowerCase()) > -1)
+          )
+      });
+    }
+    else{
+      this.setState({
+          productTypes: this.context.dataList
+      });
+    }
   }
 
   render(){
@@ -61,7 +119,7 @@ class ProductTypeList extends Component {
                 <a className="level-item" onClick={() => {this.handleEdited(item)}}>
                   <span className="icon"><i className="fa fa-edit"></i></span>
                 </a>
-                <a className="level-item">
+                <a className="level-item" onClick={() => {this.handleDeleted(item)}}>
                   <span className="icon"><i className="fa fa-trash-o"></i></span>
                 </a>
               </div>
@@ -71,9 +129,15 @@ class ProductTypeList extends Component {
       );
     });
     return (
-      <div className="box">{list}</div>
+      <div className="box">
+        {list}
+      </div>
     );
   }
 }
 
-export default ProductTypeList;
+ProductTypeList.contextTypes = {
+  dataList: PropTypes.array,
+  filterField: PropTypes.string,
+  global: PropTypes.object
+};

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Navigation from './navigation';
 
-class Console extends Component {
+export default class Console extends Component {
   render() {
     const consoleInstance = (
       <div>
@@ -23,5 +23,3 @@ class Console extends Component {
     return (consoleInstance);
   }
 }
-
-export default Console;

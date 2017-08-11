@@ -1,13 +1,23 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import Global from '../global';
 import 'whatwg-fetch';
 
-class Navigation extends Component {
-  constructor(props) {
+export default class Navigation extends Component {
+  constructor(props){
     super(props);
     this.state = {
-      global: new Global()
+      isAuth: false
+    }
+  }
+
+  componentDidMount(){
+    this.context.global = new Global();
+    if(this.context.global.hasCurrentUser()){
+      this.setState({
+        isAuth: true
+      });
     }
   }
 
@@ -16,9 +26,10 @@ class Navigation extends Component {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Token ' + (this.state.global.getCurrentUser() != null ? this.state.global.getCurrentUser().token : ''),
+          'Authorization': 'Token ' + (this.context.global.getCurrentUser() != null ? this.context.global.getCurrentUser().token : ''),
         }
-    }).then((response) => {
+    })
+    .then((response) => {
       if(response.status >= 200 && response.status < 300){
         return response.json();
       }
@@ -27,16 +38,17 @@ class Navigation extends Component {
         error.response = response;
         throw error;
       }
-    }).then((data) => {
-        console.log(data);
-    }).catch((ex) => {
+    })
+    .then((data) => {
+    })
+    .catch((ex) => {
         console.log('logout failed', ex);
     });
   }
 
   render() {
     const AuthNav = withRouter(({ history }) => (
-      this.state.global.hasCurrentUser() ? (
+      this.state.isAuth ? (
           <div>
             <nav className="navbar">
               <div className="navbar-brand">
@@ -77,12 +89,12 @@ class Navigation extends Component {
                       <span className="icon">
                         <i className="fa fa-user"></i>
                       </span>
-                      <span>{this.state.global.getCurrentUser() != null ? this.state.global.getCurrentUser().user.username : 'Account'}</span>
+                      <span>{this.context.global.getCurrentUser() != null ? this.context.global.getCurrentUser().user.username : 'Account'}</span>
                     </a>
                     <div className="navbar-dropdown">
                       <a className="navbar-item" onClick={() => {
                             this.logout();
-                            this.state.global.unAuthenticated(() => history.push(process.env.PUBLIC_URL + '/login'));
+                            this.context.global.unAuthenticated(() => history.push(process.env.PUBLIC_URL + '/login'));
                           }}>
                         <span className="icon is-small"><i className="fa fa-power-off"></i></span>&nbsp;<span>Logout</span>
                       </a>
@@ -95,15 +107,15 @@ class Navigation extends Component {
         )
         : (<div></div>)
     ))
-
     const navInstance = (
         <div>
           <AuthNav />
         </div>
     );
-
     return (navInstance);
   }
 }
 
-export default Navigation;
+Navigation.contextTypes = {
+  global: PropTypes.object
+}
