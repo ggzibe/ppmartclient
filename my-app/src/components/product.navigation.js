@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 
 export default class ProductNavigation extends Component {
   constructor(props){
@@ -25,9 +24,15 @@ export default class ProductNavigation extends Component {
           <nav className="tabs is-boxed is-fullwidth">
             <div className="container">
               <ul>
-                <li className={this.state.isActiveProduct ? 'is-active' : ''}><Link to={process.env.PUBLIC_URL + '/product'}>Overview</Link></li>
-                <li className={this.state.isActiveProductGroup ? 'is-active' : ''}><Link to={process.env.PUBLIC_URL + '/product/group'}>Product Group</Link></li>
-                <li className={this.state.isActiveProductType ? 'is-active' : ''}><Link to={process.env.PUBLIC_URL + '/product/type'}>Product Type</Link></li>
+                <li className={this.state.isActiveProduct ? 'is-active' : ''}>
+                  <a href={process.env.PUBLIC_URL + '/product'}>Overview</a>
+                </li>
+                <li className={this.state.isActiveProductGroup ? 'is-active' : ''}>
+                  <a href={process.env.PUBLIC_URL + '/product/group'}>Product Group</a>
+                </li>
+                <li className={this.state.isActiveProductType ? 'is-active' : ''}>
+                  <a href={process.env.PUBLIC_URL + '/product/type'}>Product Type</a>
+                </li>
               </ul>
             </div>
           </nav>

@@ -128,11 +128,12 @@ export default class ProductTypeList extends Component {
         </article>
       );
     });
-    return (
+    const instance = this.state.productTypes.length > 0 ? (
       <div className="box">
         {list}
       </div>
-    );
+    ) : (<div>No record.</div>);
+    return (instance);
   }
 }
 

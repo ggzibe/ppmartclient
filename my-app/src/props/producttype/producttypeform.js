@@ -123,7 +123,7 @@ export default class ProductTypeForm extends Component {
             <div className="field">
               <label className="label">Type Description</label>
               <div className="control">
-                <input className="input" type="text" name="description" value={this.state.description || ''} onChange={this.handleInputChanged} />
+                <input className="input" type="text" name="description" value={this.state.description || ""} onChange={this.handleInputChanged} />
               </div>
             </div>
           </section>
